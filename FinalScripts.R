@@ -769,8 +769,9 @@ dframe1Lit <- dframe1[which(!dframe1$Regime == "Control"), ]
 
 summary(dframe1Lit)
 
+# full model
 
-model4i <- glmer(cbind(Successes,Failures) ~ Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
+model4i <- glmer(cbind(Successes,Failures) ~ Regime * Pollinators + Light * Pollinators + Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
                 + (1|fRound),
                 family = binomial,
                 data = dframe1Lit)
@@ -779,6 +780,19 @@ chkconv(model4i)
 
 summary(model4i)
 drop1(model4i, test = "Chi")
+
+# work down interactions
+
+model4ia <- glmer(cbind(Successes,Failures) ~ Regime * Distance + Light + Pollinators + usage
+                 + (1|fRound),
+                 family = binomial,
+                 data = dframe1Lit)
+
+chkconv(model4ia)
+
+summary(model4ia)
+drop1(model4ia, test = "Chi")
+
 
 # non-sig interaction
 
@@ -801,7 +815,7 @@ dframe1sLit <- dframe1s[which(!dframe1s$Regime == "Control"), ]
 summary(dframe1sLit)
 
 
-model4si <- glmer(SeedCount ~ Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
+model4si <- glmer(SeedCount ~ Regime * Pollinators + Light * Pollinators + Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
                  + (1|fRound),
                  family = poisson(link = "log"),
                  data = dframe1sLit)
@@ -811,8 +825,8 @@ theta(model4si)
 
 
 # overdispersed - try nb
-
-model4si.nb <- glmer.nb(SeedCount ~ Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
+# full model
+model4si.nb <- glmer.nb(SeedCount ~ Regime * Pollinators + Light * Pollinators + Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
                        + (1|fRound),
                        data = dframe1sLit)
 
@@ -820,6 +834,15 @@ chkconv(model4si.nb)
 chkres(model4si.nb)
 summary(model4si.nb)
 drop1(model4si.nb, test = "Chi")
+
+# drop out interactions
+model4sia.nb <- glmer.nb(SeedCount ~ Regime * Distance + Regime * Light + Pollinators + usage
+                        + (1|fRound),
+                        data = dframe1sLit)
+
+chkconv(model4sia.nb)
+summary(model4sia.nb)
+drop1(model4sia.nb, test = "Chi")
 
 
 # non-sig interactions dropped (one retained)
@@ -835,7 +858,8 @@ drop1(model4s.nb, test = "Chi")
 
 ### seed weight
 
-model4wi.nb <- glmer.nb(SeedWeight.mg ~ Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
+# full model
+model4wi.nb <- glmer.nb(SeedWeight.mg ~ Regime * Pollinators + Light * Pollinators + Regime * Distance + Light * Distance + Regime * Light + Pollinators + usage
                        + (1|fRound),
                        data = dframe1sLit)
 
@@ -845,7 +869,18 @@ chkres(model4wi.nb)
 summary(model4wi.nb)
 drop1(model4wi.nb, test = "Chi")
 
-# non-sig interaction (one retained)
+# drop out interactions
+model4wi.nb <- glmer.nb(SeedWeight.mg ~ Light * Distance + Regime * Light + Pollinators + usage
+                        + (1|fRound),
+                        data = dframe1sLit)
+
+
+chkconv(model4wi.nb)
+chkres(model4wi.nb)
+summary(model4wi.nb)
+drop1(model4wi.nb, test = "Chi")
+
+# non-sig interactions (one retained)
 
 
 model4w.nb <- glmer.nb(SeedWeight.mg ~ Light * Distance + Regime + Pollinators + usage
