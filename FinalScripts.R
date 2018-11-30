@@ -2,6 +2,8 @@
 #  Binomial logistic regression of seed set #
 #############################################
 
+# final scripts, associated with an accepted manuscript in Ecosphere.
+
 rm(list=ls())
 
 # make a list of required packages, check they're all installed, then load them up
