@@ -2,7 +2,7 @@
 #  Binomial logistic regression of seed set #
 #############################################
 
-# final scripts, associated with an accepted manuscript in Ecosphere.
+# R scripts associated with the final, accepted version of the manuscript "Effects of street lighting technologies on the success and quality of pollination in a nocturnally-pollinated plant", published in Ecosphere.
 
 rm(list=ls())
 
